@@ -62,3 +62,4 @@ $string['usernamehook'] = 'Enable username hook. moodle user username will be re
 $string['podfilenotfound'] = 'Pod file not found.';
 $string['enrichedviewmode'] = 'Enriched view mode';
 $string['enrichedviewmode_help'] = 'Enriched view mode enable to use pod enriched view. Pay attention that if your video is not public user would have to authentify himself to plateform.';
+$string['noreferencedetails'] = 'Not applicable';

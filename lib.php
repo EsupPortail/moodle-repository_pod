@@ -39,7 +39,7 @@ class repository_pod extends repository {
     protected $pod;
 
     public function get_listing($path = '', $page = 0) {
-            return $this->get_listing_details($path, $page);
+        return $this->get_listing_details($path, $page);
     }
 
     public function search($query, $page = 0) {
@@ -56,6 +56,7 @@ class repository_pod extends repository {
 
     /**
      * Add Plugin settings input to Moodle form
+     *
      * @param object $mform
      */
     public static function instance_config_form($mform, $classname = 'repository') {
@@ -67,12 +68,12 @@ class repository_pod extends repository {
         $mform->addElement('checkbox', 'https', get_string('https', 'repository_pod'));
 
         $mform->addElement('text', 'pod_url', get_string('pod_url', 'repository_pod'),
-                array('size' => '100'));
+            array('size' => '100'));
         $mform->addElement('static', null, '', get_string('pod_url_help', 'repository_pod'));
         $mform->setType('pod_url', PARAM_RAW_TRIMMED);
 
         $mform->addElement('text', 'pod_api_key', get_string('pod_api_key', 'repository_pod'),
-                array('size' => '100'));
+            array('size' => '100'));
         $mform->setType('pod_api_key', PARAM_RAW_TRIMMED);
         $mform->addElement('static', null, '', get_string('pod_api_key_help', 'repository_pod'));
 
@@ -81,7 +82,7 @@ class repository_pod extends repository {
         $mform->addElement('static', null, '', get_string('extensions', 'repository_pod'));
 
         $mform->addElement('text', 'page_size', get_string('page_size', 'repository_pod'),
-                array('size' => '200'));
+            array('size' => '200'));
         $mform->setType('page_size', PARAM_INT);
         $mform->addElement('static', null, '', get_string('page_size_help', 'repository_pod'));
         $qualitymodes = array(
@@ -99,7 +100,7 @@ class repository_pod extends repository {
         );
         $mform->setDefault('thumbnail', 0);
         // User id hook : check if hookfile exists.
-        if (file_exists($CFG->dirroot.'/repository/pod/hooklib.php')) {
+        if (file_exists($CFG->dirroot . '/repository/pod/hooklib.php')) {
             $mform->addElement('checkbox', 'usernamehook', get_string('usernamehook', 'repository_pod'));
             $mform->setDefault('usernamehook', 0);
         }
@@ -118,9 +119,9 @@ class repository_pod extends repository {
             'enrichedviewmode');
     }
 
-    public function send_file($storedfile, $lifetime=86400 , $filter=0, $forcedownload=true, array $options = null) {
+    public function send_file($storedfile, $lifetime = 86400, $filter = 0, $forcedownload = true, array $options = null) {
         global $CFG, $DB;
-        require_once($CFG->dirroot.'/mod/resource/locallib.php');
+        require_once($CFG->dirroot . '/mod/resource/locallib.php');
         $podrestapimanager = new \repository_pod\manager\repository_pod_api_manager($this->options);
         $qualitymode = $this->options['qualitymode'];
         $podresourceid = $storedfile->get_reference();
@@ -150,7 +151,7 @@ class repository_pod extends repository {
             $result = $podrestapimanager->execute_request('/rest/videos/' . $podresourceid . '/?format=json', array());
             if ($result) {
                 $slug = $result->slug;
-                $videourl = $this->options['pod_url'].'/video/'.$slug.'/?is_iframe=true';
+                $videourl = $this->options['pod_url'] . '/video/' . $slug . '/?is_iframe=true';
             } else {
                 throw new repository_exception('podfileresourcefound', 'repository', '',
                     get_string('podfilenotfound', 'repository_pod'));
@@ -169,18 +170,24 @@ class repository_pod extends repository {
                     $videourl = $result->source_file;
                 }
             }
+            if (!empty($videourl)) {
+                header('Location: ' . $videourl);
+            } else {
+                throw new repository_exception('podfilenotfound', 'repository', '',
+                    get_string('podfilenotfound', 'repository_pod'));
+            }
         }
         /*
          * Display results
          */
         if (!empty($videourl)) {
-            header('Location: '.$videourl);
+            header('Location: ' . $videourl);
         } else {
             throw new repository_exception('podfilenotfound', 'repository', '', get_string('podfilenotfound', 'repository_pod'));
         }
     }
 
-    public function get_listing_details($path, $page, $request='') {
+    public function get_listing_details($path, $page, $request = '') {
         global $USER;
         if (isset($USER)) {
             $username = repository_pod_tools::moodle_username_to_pod_uid($this->options['usernamehook']);
@@ -218,6 +225,29 @@ class repository_pod extends repository {
             );
         }
         return $list;
+    }
+
+    /**
+     * Get human readable file info from a the reference.
+     *
+     * @param string $reference
+     * @param int $filestatus
+     */
+    public function get_reference_details($reference, $filestatus = 0) {
+        // Show ref only in enrichedmode.
+        if ($this->options['enrichedviewmode'] == 1) {
+            // Retrieve video slug.
+            $podrestapimanager = new repository_pod_api_manager($this->options);
+            $result = $podrestapimanager->execute_request('/rest/videos/' . $reference . '/?format=json', array());
+            if ($result) {
+                $slug = $result->slug;
+                return $this->options['pod_url'] . '/video/' . $slug . '/?is_iframe=true';
+            } else {
+                return get_string('podfilenotfound', 'repository_pod');
+            }
+        } else {
+            return get_string('noreferencedetails', 'repository_pod');
+        }
     }
 }
 
