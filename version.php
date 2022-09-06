@@ -29,8 +29,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022011402;
+$plugin->version   = 2022090600;
 $plugin->requires  = 2018051708;
 $plugin->component = 'repository_pod';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.2.2';
+$plugin->release = '2.2.3';
