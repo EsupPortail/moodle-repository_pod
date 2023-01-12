@@ -71,6 +71,10 @@ class repository_pod extends repository {
             array('size' => '100'));
         $mform->addElement('static', null, '', get_string('pod_url_help', 'repository_pod'));
         $mform->setType('pod_url', PARAM_RAW_TRIMMED);
+        $mform->addElement('text', 'site_id', get_string('site_id', 'repository_pod'), array('size' => '100'));
+        $mform->addElement('static', null, '', get_string('site_id_help', 'repository_pod'));
+        $mform->setType('site_id', PARAM_INT);
+        $mform->setDefault('site_id', 1);
 
         $mform->addElement('text', 'pod_api_key', get_string('pod_api_key', 'repository_pod'),
             array('size' => '100'));
@@ -105,6 +109,7 @@ class repository_pod extends repository {
             $mform->setDefault('usernamehook', 0);
         }
         $mform->addRule('pod_url', $strrequired, 'required', null, 'client');
+        $mform->addRule('site_id', $strrequired, 'required', null, 'client');
         $mform->addRule('pod_api_key', $strrequired, 'required', null, 'client');
         $mform->addRule('page_size', $strrequired, 'required', null, 'client');
         $mform->addRule('extensions', $strrequired, 'required', null, 'client');
@@ -194,10 +199,12 @@ class repository_pod extends repository {
         } else {
             require_login();
         }
+        $site = $this->options['site_id'];
         $params = array(
             "username" => $username,
             "format" => "json",
             "encoding_in_progress" => "False",
+            "sites" => $site,
         );
         if (!empty($this->options['extensions'])) {
             $params['extensions'] = $this->options['extensions'];

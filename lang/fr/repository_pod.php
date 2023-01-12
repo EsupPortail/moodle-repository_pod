@@ -43,3 +43,5 @@ $string['thumbnail'] = 'Défaut : Non, affichage des vignettes / Oui, affichage 
 $string['thumbnail_desc'] = 'Mode extension';
 $string['usernamehook'] = 'Activer le hook username. Le username moodle sera remplacé à l\'aide d\'une fonction hook renseignée dans un fichier hooklib.php à la racine du dossier repositpry/pod.';
 $string['podfilenotfound'] = 'Fichier pod non trouvé.';
+$string['site_id'] = 'ID du site Pod (1 si mode non multi-tenant)';
+$string['site_id_help'] = 'Le site id du site pod. 1 si le pod est n\'est pas en  multi-tenant';
