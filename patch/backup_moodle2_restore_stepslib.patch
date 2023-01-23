@@ -1,6 +1,6 @@
---- /datas/dev/moodle/moodle_gitworkspaces/moodle404/moodle2_version_org/backup/moodle2/restore_stepslib.php	2022-09-30 04:17:34.000000000 +0200
-+++ /datas/dev/moodle/moodle_gitworkspaces/moodle404/moodle2_version/backup/moodle2/restore_stepslib.php	2022-10-04 16:31:22.908913291 +0200
-@@ -5554,7 +5556,9 @@
+--- /datas/dev/moodle/moodle_gitworkspaces/moodle404/moodle2_version_org/backup/moodle2/restore_stepslib.php	2023-01-14 07:17:03.000000000 +0100
++++ /datas/dev/moodle/moodle_gitworkspaces/moodle404/moodle2_version/backup/moodle2/restore_stepslib.php	2023-01-19 08:59:12.525786427 +0100
+@@ -5613,7 +5615,9 @@
                  // This is a reference to some external file such as dropbox.
                  // If we are restoring to the same site, keep the reference untouched and
                  // restore the alias as is.
@@ -11,14 +11,15 @@
                      $fs->create_file_from_reference($info->newfile, $repository->id, $info->oldfile->reference);
                      $this->notify_success($info);
                      continue;
-@@ -5616,7 +5620,9 @@
-
+@@ -5676,7 +5680,10 @@
              // Both Server files and Legacy course files repositories have a single
              // instance at the system context to use. Let us try to find it.
--            if ($info->oldfile->repositorytype === 'local' or $info->oldfile->repositorytype === 'coursefiles') {
-+            // UNISTRA DEV.
-+            if ($info->oldfile->repositorytype === 'local' or $info->oldfile->repositorytype === 'coursefiles' or $info->oldfile->repositorytype == 'pod') {
-+            // END UNISTRA DEV.
+             if ($info->oldfile->repositorytype === 'local' || $info->oldfile->repositorytype === 'coursefiles'
+-                    || $info->oldfile->repositorytype === 'contentbank') {
++                    // UNISTRA DEV.
++                    || $info->oldfile->repositorytype === 'contentbank'
++                    || $info->oldfile->repositorytype == 'pod') {
++                    // END UNISTRA DEV.
                  $sql = "SELECT ri.id
                            FROM {repository} r
                            JOIN {repository_instances} ri ON ri.typeid = r.id
