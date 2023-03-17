@@ -60,7 +60,7 @@ class repository_pod_api_manager {
         }
         $datas = json_decode($response);
         if (!empty($datas)) {
-            if (property_exists($datas, 'results')) {
+            if (!is_array($datas) && property_exists($datas, 'results')) {
                 foreach ($datas->results as $data) {
                     array_push($res, $data);
                 }
