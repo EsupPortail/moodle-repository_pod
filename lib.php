@@ -231,6 +231,7 @@ class repository_pod extends repository {
                 'list' => array()
             );
         }
+        $list['nologin'] = true;
         return $list;
     }
 
